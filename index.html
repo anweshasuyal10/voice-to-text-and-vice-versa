@@ -1,0 +1,168 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Speech Converter</title> 
+  <style> 
+    /* General Styles */ 
+    body { 
+      font-family: 'Arial', sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: linear-gradient(135deg, #1e90ff, #ff7f50); 
+      color: #fff; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+    } 
+ 
+    /* Card Container */ 
+    .container { 
+      background: #2b2b2b; 
+      border-radius: 10px; 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+      width: 90%; 
+      max-width: 500px; 
+      padding: 20px; 
+      text-align: center; 
+    } 
+ 
+    /* Heading Styles */ 
+    h1 { 
+      font-size: 2rem; 
+      margin-bottom: 10px; 
+      color: #ffd700; 
+    } 
+ 
+    /* Textarea */ 
+    textarea { 
+      width: 100%; 
+      height: 100px; 
+      margin: 10px 0; 
+      padding: 10px; 
+      border: none; 
+      border-radius: 5px; 
+      font-size: 1rem; 
+      resize: none; 
+    } 
+ 
+    /* Dropdown */ 
+    select { 
+      width: 100%; 
+      padding: 10px; 
+      border: none; 
+      border-radius: 5px; 
+      font-size: 1rem; 
+      margin: 10px 0; 
+      background: #444; 
+      color: #fff; 
+    } 
+ 
+    /* Buttons */ 
+    button { 
+      margin: 10px 0; 
+      padding: 15px 20px; 
+      background: #ffd700; 
+      color: #2b2b2b; 
+      border: none; 
+      border-radius: 5px; 
+      font-size: 1rem; 
+      font-weight: bold; 
+      cursor: pointer; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    } 
+ 
+    button:hover { 
+      transform: scale(1.1); 
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4); 
+    } 
+ 
+    /* Output Section */ 
+    #outputText { 
+      font-size: 1.2rem; 
+      margin-top: 10px; 
+      background: #444; 
+      padding: 10px; 
+      border-radius: 5px; 
+    } 
+ 
+    /* Responsive Design */ 
+    @media (max-width: 768px) { 
+      h1 { 
+        font-size: 1.5rem; 
+      } 
+ 
+      textarea { 
+        font-size: 0.9rem; 
+      } 
+ 
+      button { 
+        font-size: 0.9rem; 
+      } 
+    } 
+  </style> 
+</head> 
+<body> 
+  <div class="container"> 
+    <h1>Speech Converter</h1> 
+    <!-- Text-to-Speech Section --> 
+    <textarea id="textInput" placeholder="Type text here..."></textarea> 
+    <select id="languageSelect"> 
+      <option value="en-US">English (US)</option> 
+      <option value="hi-IN">Hindi (India)</option> 
+      <option value="bn-IN">Bengali (India)</option> 
+      <option value="ta-IN">Tamil (India)</option> 
+      <option value="te-IN">Telugu (India)</option> 
+      <option value="gu-IN">Gujarati (India)</option> 
+      <option value="mr-IN">Marathi (India)</option> 
+    </select> 
+    <button onclick="speakText()">🎙 Convert to Voice</button> 
+ 
+    <!-- Speech-to-Text Section --> 
+    <button onclick="startListening()">🎤 Start Voice Recognition</button> 
+    <p id="outputText">Transcription will appear here...</p> 
+  </div> 
+ 
+  <script> 
+    // Text-to-Speech Functionality 
+    function speakText() { 
+      const text = document.getElementById('textInput').value; 
+      const language = document.getElementById('languageSelect').value; 
+      if (text) { 
+        const utterance = new SpeechSynthesisUtterance(text); 
+        utterance.lang = language; 
+        speechSynthesis.speak(utterance); 
+      } else { 
+        alert('Please enter some text.'); 
+      } 
+    } 
+ 
+    // Speech-to-Text Functionality 
+    function startListening() { 
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; 
+      if (!SpeechRecognition) { 
+        alert('Your browser does not support Speech Recognition.'); 
+        return; 
+      } 
+ 
+      const recognition = new SpeechRecognition(); 
+      recognition.lang = document.getElementById('languageSelect').value; 
+      recognition.interimResults = false; 
+ 
+      recognition.onresult = (event) => { 
+        const transcript = event.results[0][0].transcript;
+
+document.getElementById('outputText').textContent = transcript; 
+      }; 
+ 
+      recognition.onerror = (event) => { 
+        alert('Error occurred: ' + event.error); 
+      }; 
+ 
+      recognition.start(); 
+    } 
+  </script> 
+</body> 
+</html>
